@@ -1,6 +1,6 @@
 # iPET: Privacy Enhancing Traffic Perturbations for IoT Communications
 
-iPET is a privacy enhancing traffic perturbation technique that counters ML-based fingerprinting attacks. iPET uses adversarial deep learning, specifically, Generative Adversarial Networks (GANs), to generate these perturbations. Unlike conventional GANs, a key idea of iPET is to deliberately introduce stochasticity in the model.
+[iPET](./README.md#References) is a privacy enhancing traffic perturbation technique that counters ML-based fingerprinting attacks. iPET uses adversarial deep learning, specifically, Generative Adversarial Networks (GANs), to generate these perturbations. Unlike conventional GANs, a key idea of iPET is to deliberately introduce stochasticity in the model.
 
 Our paper describes the workings of iPET in detail. [Link to paper]().
 
@@ -23,3 +23,16 @@ $ conda activate ipet
 
 ## Contact
 For any queries, please feel free to raise issues or contact the authors.
+
+## References
+Akshaye Shenoi, Prasanna Karthik, Kanav Sabharwal, Li Jialin, and Dinil Mon Divakaran. ‘IPET: Privacy Enhancing Traffic Perturbations for IoT Communications’ in Privacy Enhancing Technologies Symposium, 2023.
+
+
+```
+@article{ipet2023,
+author = {Akshaye Shenoi and Prasanna Karthik and Kanav Sabharwal and Li Jialin and Dinil Mon Divakaran},
+title = {iPET: Privacy Enhancing Traffic Perturbations for IoT Communications},
+year = {2023},
+journal = {Privacy Enhancing Technologies Symposium}
+}
+```
