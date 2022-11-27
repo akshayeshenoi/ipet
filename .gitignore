@@ -1,0 +1,11 @@
+.DS_Store
+*.pyc
+*.ipynb
+*.csv
+*.npy
+!devices.csv
+.ipynb_checkpoints
+Models/*
+build
+All_features
+venv
