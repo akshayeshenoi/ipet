@@ -43,6 +43,7 @@ The models can now be trained.
 The following parameters can be configured in `constants.py` for the M_sequence classifier:
 - `total_time`: The total observation time for the time series, in seconds.
 - `omega` : The duration of a discrete time-slot in the time series, in seconds.
+- `train_sit`: To specify the model architecture to be used for training the fingerprinting classifier. Currently we only accept  `'LSTM', 'GRU', 'CNN' and 'MLP'` as arguements.
 - `device_name` : Name list of the devices in the network. For e.g. `['device_A','device_B,'device_C']`
 
 **Generating Fetaure Vectors**  

@@ -10,6 +10,7 @@ actual_id = dict(zip(keys,values))
 ## M_Seq params
 total_time = 4
 omega = 0.1
+train_sit = 'LSTM'  #'CNN'/'GRU'/'MLP'
 
 ## M_Agg params
 agg_mins = 15
