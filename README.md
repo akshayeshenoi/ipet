@@ -7,14 +7,16 @@ Our paper describes the workings of iPET in detail. [Link to paper](https://gith
 We make our source code available in this repository.
 
 The code is organized as follows:
-1. The `ipet` directory contains the core algorithm of our proposal (described in Section 4).
-2. The `IoT_Device_Fingerprinting` directory contains the code for the attacker fingerprinting models (described in Section 2).
+1. The `IoT_Device_Fingerprinting` directory contains the code for the attacker fingerprinting models (described in Section 2).
+2. The `ipet` directory contains the core algorithm of our proposal (described in Section 4).
 3. `baselines` contains code for traffic obfuscation techniques used in our evaluations (Section 5.1.2).
 
 Each component contains relevant README files.
 
+To generate iPET perturbations, the user must first train the discriminator as described [here](./IoT_Device_Fingerprinting/README.md).
+
 ## Dependencies
-We have tested our code on Ubuntu 20.04 and Python 3.8. Further dependencies can be installed from `environment.yml`.
+We have tested our code on Ubuntu 20.04 and Python 3.8 (Anaconda Distribution). Additional dependencies can be installed from `environment.yml`.
 
 ```sh
 $ conda env create --file environment.yml

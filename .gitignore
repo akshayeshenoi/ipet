@@ -9,3 +9,6 @@ Models/*
 build
 All_features
 venv
+*.pb
+**/assets/*
+**/variables/*

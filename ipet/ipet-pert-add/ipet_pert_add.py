@@ -8,13 +8,11 @@ import sys
 
 OMEGA = 0.1 # second
 op_path = "./output"
-
-if len(sys.argv) != 2:
-    print("python3 base.py generator_version") # python3 base.py 1
-    exit(1)
+perts_path = "./perts"
 
 num_samples = int(2e4)
-epoch = sys.argv[1]
+num_days = 1
+generation = 1
 
 # prepare time ticks
 # should be whenever there's a frame, or every 100ms
@@ -125,15 +123,15 @@ def driver(df):
     print(df[1])
     trace_df = df[0]
     device_name = df[1].split('.')[0].split('_')[2]
-    pert_npy_fp =  '_'.join([device_name, str(epoch)]) + '.npy'
+    pert_npy_fp =  '_'.join([device_name, str(generation)]) + '.npy'
 
-    if not Path('perts/' + pert_npy_fp).is_file():
+    if not Path(perts_path + "/" + pert_npy_fp).is_file():
         # generate perturbation
-        op = subprocess.run(['python3', 'predict.py', str(num_samples), device_name, str(epoch)], stderr=subprocess.DEVNULL)
+        op = subprocess.run(['python3', 'predict.py', str(num_samples), device_name, str(generation)], stderr=subprocess.DEVNULL)
         # ,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        op = subprocess.run(['mv', pert_npy_fp, 'perts/' + pert_npy_fp])
+        op = subprocess.run(['mv', pert_npy_fp, perts_path + "/" + pert_npy_fp])
 
-    perts_arr = np.load('perts/' + pert_npy_fp)
+    perts_arr = np.load(perts_path + "/" + pert_npy_fp)
 
     ticks = create_ticks(trace_df['frame.time_relative_normalised'],
                             trace_df['transport.len'],
@@ -144,7 +142,7 @@ def driver(df):
     np.save(op_path + '/' + df[1], op_arr)
 
 
-original_trace_bp = '../IoT_Device_Fingerprinting/data/split-trace/'
+original_trace_bp = '../../IoT_Device_Fingerprinting/data/split-trace/'
 
 devices = pd.read_csv(original_trace_bp + '../devices.csv', delimiter='\t')
 
@@ -154,7 +152,7 @@ devices_list = list(set(devices['Hostname']) - set(ignore_list))
 experiment_list = []
 
 # number of days
-for day in range(20):
+for day in range(num_days):
     for device in devices_list:
         exp_case = 'day_' + str(day) + '_' + device + '.csv'
         experiment_list += [exp_case]
@@ -178,9 +176,11 @@ for experiment in experiment_list:
         pass
 
 Path(op_path).mkdir(exist_ok=True)
+Path(perts_path).mkdir(exist_ok=True)
+
 random.shuffle(dfs_list)
 
-POOL_SIZE = 30
+POOL_SIZE = 5
 
 pool = Pool(POOL_SIZE)
 pool.map(driver, dfs_list)

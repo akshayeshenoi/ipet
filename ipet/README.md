@@ -12,7 +12,7 @@ Follow the steps described [here](../IoT_Device_Fingerprinting/README.md) to tra
 ## Training Generators
 Once the discriminator is trained, the model files will be saved in `IoT_Device_Fingerprinting/Models/` where we will access it from.
 
-Before training iPET, the following parameters can be configued in `constants.py` (present in the `ipet-pert-train/` directory):
+Before training iPET, the following parameters can be configured in `constants.py` (present in the `ipet-pert-train/` directory):
 - `max_packets_per_omega` : Maximum number of dummy packets allowed to be added in a discrete time-slot 
 - `max_payload_per_omega` : Maximum additional payload bytes to be added in a discrete time-slot
 - `training_stages` : Number of stages you want to train iPET for
@@ -21,7 +21,7 @@ Note that the discrete time-slot `omega` and total window time `total_time` must
 
 Finally, the iPET generators can be trained using the following script: 
 ```sh
-$ cd ipet-pert-train
+$ cd ipet/ipet-pert-train
 $ python iPet_Training.py 
 ```
 
@@ -30,15 +30,17 @@ The generated models will be saved in the `ipet-pert-train/Models` directory.
 ### Producing Perturbations
 The trained models will be saved on the disk for each a) device, b) generator version. The `predict.py` script loads the saved models for the specific combination of parameters requested by the user.  
 
-The user must ensure that the requirements in `requirements.txt` are installed.
+Note: Please refer to Section 4 of our paper for a detailed explanation of how iPET perturbations are produced.
 
-To run the script:
+The script takes the following positional arguments
+- `num_samples`: Total number of perturbations vectors required. A vector specifies the number of dummy packets to be added for each time slot. The total number of time slots per vector (`total_time`), and the duration of each time slot (`omega`) is configured [here](../IoT_Device_Fingerprinting/README.md#m_sequence). Therefore, under the [default](../IoT_Device_Fingerprinting/constants.py) settings, `num_samples = 10` would correspond to `10 x 4 = 40` seconds of perturbations, with each time slot being `0.1` seconds long.
+- `dev_id`: The id of the device. In our example, we use human friendly IDs that correspond to the IDs used in the [training](../IoT_Device_Fingerprinting/constants.py) phase.
+- `generation`: The generator stage G = 0,1,2.
+
+For instance, to produce 10 perturbation vectors (concatenated), by generator at stage 2, for device `smrtthings`:
 ```sh
-$ python python predict.py <num_samples> <dev_id> <generation>
+$ python predict.py 10 smrtthings 2
 ```
-- `num_samples`: Total number of perturbations vectors required.
-- `dev_id`: The id of the device. In our example, we use human friendly IDs that correspond to the IDs used in the training phase.
-- `generation`: The generator stage (i.e. G_0, G_1..). 
 
 The output will be saved as a numpy array which can be used by the gateway to add perturbations. Each row corresponds to timeslot omega and states the quantities that must be added as cover traffic. Specifically, they are: 
 `# outgoing packets | total size of outgoing packets | # incoming packets | total size of incoming packets`
@@ -47,11 +49,24 @@ The output will be saved as a numpy array which can be used by the gateway to ad
 To test the perturbations on real traffic, we provide a simple simulator.  
 
 For each device, the script does the following:
-1. It generates perturbations, if they don't exist (using the same `predict.py` script above)
-2. It loads device specific traffic traces from `../IoT_Device_Fingerprinting/data/split-trace/`
-3. It increments a timer and outputs both legitimate packets and/or cover traffic as instructed by the perturbations.
-4. The output traffic is saved in numpy format.
+1. It pre-generates perturbations, if they don't exist (using the same `predict.py` script above) and loads them.
+2. It loads device-specific traffic traces from `../IoT_Device_Fingerprinting/data/split-trace/`.
+3. It increments a timer and adds the perturbations (in the form of dummy packets) to the device traffic trace, as instructed by the vectors.
+4. The output traffic trace is saved in numpy format.
 
-The output contains the direction of the packet, status as dummy packet, size of the packet and time when it was sent.
+The output contains metadata for each packet in the following format:
+- The direction of the packet (1 for outgoing, -1 for incoming)
+- Flag indicating whether it is a dummy packet (0 for legitimate, 1 for dummy)
+- Size of the packet (in bytes)
+- Time when it was sent (in seconds)
 
 Packets are produced in both incoming and outgoing directions.
+
+Parameters such as omega, number of days, number of samples and generator stage (generation) can be configured directly in the file.
+
+To run the script, simply execute:
+```sh
+$ python ipet_pert_add.py
+```
+
+The traces are saved in the `output/` directory.
