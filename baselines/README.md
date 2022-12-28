@@ -10,7 +10,7 @@ Broadly, the scripts perform the following functions:
 3. The output traffic is saved in numpy format.
 
 ### Data Required
-Ensure that the data preparation step descriped in the `IoT_Device_Fingerprinting` [readme](../IoT_Device_Fingerprinting/README.md) is completed.
+Ensure that the data preparation step described in the `IoT_Device_Fingerprinting` [readme](../IoT_Device_Fingerprinting/README.md) is completed.
 
 The scripts require day and device specific traces in the `../IoT_Device_Fingerprinting/data/split-trace` directory.
 
